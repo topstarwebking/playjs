@@ -1,120 +1,138 @@
-Contribution: 2016-04-21 20:00
+# playwright-test [![NPM Version](https://img.shields.io/npm/v/playwright-test.svg)](https://www.npmjs.com/package/playwright-test) [![NPM Downloads](https://img.shields.io/npm/dt/playwright-test.svg)](https://www.npmjs.com/package/playwright-test) [![NPM License](https://img.shields.io/npm/l/playwright-test.svg)](https://www.npmjs.com/package/playwright-test) ![tests](https://github.com/hugomrdias/playwright-test/workflows/tests/badge.svg)
 
-Contribution: 2016-04-23 20:00
+> Run mocha, zora, uvu, tape and benchmark.js scripts inside real browsers with `playwright`.
 
-Contribution: 2016-04-23 20:01
+## Install
 
-Contribution: 2016-04-25 20:00
+```shell
+$ npm install playwright-test
+```
 
-Contribution: 2016-04-26 20:00
+## Usage
 
-Contribution: 2016-04-26 20:01
+```shell
+$ playwright-test [files] [options]
+# or
+$ pw-test [files] [options]
 
-Contribution: 2016-04-29 20:00
+```
 
-Contribution: 2016-04-29 20:01
+## Options
 
-Contribution: 2016-05-07 20:00
+```shell
+Description
+    Run mocha, zora, uvu, tape and benchmark.js scripts inside real browsers with `playwright`.
 
-Contribution: 2016-05-08 20:00
+  Usage
+    $ playwright-test [files] [options]
 
-Contribution: 2016-05-09 20:00
+  Options
+    -r, --runner       Test runner. Options: mocha, tape, zora, uvu and benchmark.  (default mocha)
+    -b, --browser      Browser to run tests. Options: chromium, firefox, webkit.  (default chromium)
+    -m, --mode         Run mode. Options: main, worker.  (default main)
+    -d, --debug        Debug mode, keeps browser window open.
+    -w, --watch        Watch files for changes and re-run tests.
+    -i, --incognito    Use incognito window to run tests.
+    -e, --extension    Use extension background_page to run tests.
+    --cov              Enable code coverage in istanbul format. Outputs '.nyc_output/coverage-pw.json'.
+    --before           Path to a script to be loaded on a separate tab before the main script.
+    --sw               Path to a script to be loaded in a service worker.
+    --assets           Assets to be served by the http server.  (default process.cwd())
+    --cwd              Current directory.  (default process.cwd())
+    --extensions       File extensions allowed in the bundle.  (default js,cjs,mjs,ts,tsx)
+    --config           Path to the config file
+    -v, --version      Displays current version
+    -h, --help         Displays this message
 
-Contribution: 2016-05-09 20:01
 
-Contribution: 2016-05-13 20:00
+  Examples
+    $ playwright-test test.js --runner tape
+    $ playwright-test test --debug
+    $ playwright-test "test/**/*.spec.js" --browser webkit --mode worker --incognito --debug
 
-Contribution: 2016-05-13 20:01
+    $ playwright-test bench.js --runner benchmark
+    # Uses benchmark.js to run your benchmark see playwright-test/mocks/benchmark.js for an example.
 
-Contribution: 2016-05-18 20:00
+    $ playwright-test test --cov && npx nyc report --reporter=html
+    # Enable code coverage in istanbul format which can be used by nyc.
 
-Contribution: 2016-05-20 20:00
+    $ playwright-test "test/**/*.spec.js" --debug --before ./mocks/before.js
+    # Run a script in a separate tab check ./mocks/before.js for an example.
+    # Important: You need to call `self.PW_TEST.beforeEnd()` to start the main script.
 
-Contribution: 2016-05-20 20:01
+  Runner Options
+    All arguments passed to the cli not listed above will be fowarded to the runner.
+    $ playwright-test test.js --runner mocha --bail --grep 'should fail'
 
-Contribution: 2016-05-22 20:00
+    To send a `false` flag use --no-bail.
+    Check https://mochajs.org/api/mocha for `mocha` options or `npx mocha --help`.
 
-Contribution: 2016-05-24 20:00
+  Notes
+    DEBUG env var filtering for 'debug' package logging will work as expected.
+    $ DEBUG:app playwright-test test.js
 
-Contribution: 2016-05-24 20:01
+    Do not let your shell expand globs, always wrap them.
+    $ playwright-test "test/**" GOOD
+    $ playwright-test test/** BAD
+```
 
-Contribution: 2016-05-25 20:00
+## Config
 
-Contribution: 2016-05-26 20:00
+> The config file needs to be commonjs for now, so if your package is pure ESM you need to use `.cjs` extension.
 
-Contribution: 2016-05-27 20:00
+Configuration can be done with cli flags or config files.
 
-Contribution: 2016-05-27 20:01
+```js
+'package.json', // using property `pw-test` or `playwright-test`
+`.playwright-testrc.json`,
+`.playwright-testrc.js`,
+`playwright-test.config.js`,
+`.playwright-testrc.cjs`,
+`playwright-test.config.cjs`,
+`.pw-testrc.json`,
+`.pw-testrc.js`,
+`pw-test.config.js`,
+`.pw-testrc.cjs`,
+`pw-test.config.cjs`,
+```
 
-Contribution: 2016-05-28 20:00
+The config type can be imported from the entrypoint.
 
-Contribution: 2016-05-28 20:01
+```ts
+import type { RunnerOptions } from 'playwright-test'
+```
 
-Contribution: 2016-05-30 20:00
+### Interface
 
-Contribution: 2016-06-07 20:00
+```ts
+export interface RunnerOptions {
+  cwd: string
+  assets: string
+  browser: 'chromium' | 'firefox' | 'webkit'
+  debug: boolean
+  mode: 'main' | 'worker'
+  incognito: boolean
+  input?: string[]
+  extension: boolean
+  runnerOptions: any
+  before?: string
+  sw?: string
+  cov: false
+  extensions: string
+  buildConfig: BuildOptions
+  buildSWConfig: BuildOptions
+  beforeTests: (opts: RunnerOptions) => Promise<unknown>
+  afterTests: (
+    opts: RunnerOptions,
+    beforeTestsOutput: unknown
+  ) => Promise<unknown>
+}
+```
 
-Contribution: 2016-06-07 20:01
+## Run in CI
 
-Contribution: 2016-06-15 20:00
+Check our CI config `.github/workflows/main.yml` and the playwright [Github Action](https://playwright.dev/docs/ci/#github-actions)
 
-Contribution: 2016-06-17 20:00
+## License
 
-Contribution: 2016-06-17 20:01
-
-Contribution: 2016-06-18 20:00
-
-Contribution: 2016-06-20 20:00
-
-Contribution: 2016-06-20 20:01
-
-Contribution: 2016-06-25 20:00
-
-Contribution: 2016-06-25 20:01
-
-Contribution: 2016-07-04 20:00
-
-Contribution: 2016-07-04 20:01
-
-Contribution: 2016-07-10 20:00
-
-Contribution: 2016-07-10 20:01
-
-Contribution: 2016-07-13 20:00
-
-Contribution: 2016-07-13 20:01
-
-Contribution: 2016-07-20 20:00
-
-Contribution: 2016-07-25 20:00
-
-Contribution: 2016-07-25 20:01
-
-Contribution: 2016-07-28 20:00
-
-Contribution: 2016-07-31 20:00
-
-Contribution: 2016-07-31 20:01
-
-Contribution: 2016-08-02 20:00
-
-Contribution: 2016-08-02 20:01
-
-Contribution: 2016-08-03 20:00
-
-Contribution: 2016-08-03 20:01
-
-Contribution: 2016-08-08 20:00
-
-Contribution: 2016-08-08 20:01
-
-Contribution: 2016-08-09 20:00
-
-Contribution: 2016-08-09 20:01
-
-Contribution: 2016-08-18 20:00
-
-Contribution: 2016-08-18 20:01
-
-Contribution: 2016-08-19 20:00
-
+MIT © [Hugo Dias](http://hugodias.me)
